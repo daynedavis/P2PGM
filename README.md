@@ -3,7 +3,7 @@ P2PGM
 
 Peer to Peer Group Messaging
 
-Install [homebrew](brew.sh)
+Install [homebrew](http://brew.sh)
 
 Install nodejs and gruntjs with:
 
