@@ -13,7 +13,7 @@ Install nodejs and gruntjs with:
 * brew install node
 * npm install -g grunt-cli
 
-Then navigate to the project directory and run the following to install the npm packages:
+Then nnavigate to the project directory and run the following to install the npm packages:
 
 * npm install
 
