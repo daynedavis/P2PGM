@@ -17,14 +17,6 @@ app.get('/api/user', function(req, res) {
   });
 });
 
-app.get('/api', function(req, res) {
-
-
-
-			res.json({message: 'Hello'}); // return all user in JSON format
-
-	});
-
 // create todo and send back all user after creation
 app.post('/api/user', function(req, res) {
 
