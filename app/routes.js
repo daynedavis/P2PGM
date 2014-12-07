@@ -1,8 +1,10 @@
 var User = require('./models/user');
+var Tag = require('./models/tag');
 
 module.exports = function(app) {
 
-// api ---------------------------------------------------------------------
+// api ===================================================================
+// Users -----------------------------------------------------------------
 // get all todos
 app.get('/api/user', function(req, res) {
 
@@ -56,6 +58,61 @@ app.delete('/api/user/:user_id', function(req, res) {
     });
   });
 });
+
+// Tags -------------------------------------------------------------------
+
+// get all tags
+app.get('/api/tag', function(req, res) {
+
+  // use mongoose to get all todos in the database
+  Tag.find(function(err, tag) {
+
+    // if there is an error retrieving, send the error. nothing after res.send(err) will execute
+    if (err)
+      res.send(err);
+
+      res.json(tag); // return all user in JSON format
+    });
+  });
+
+// Create tag
+app.post('/api/tag', function(req, res) {
+
+  // create a todo, information comes from AJAX request from Angular
+  Tag.create({
+    tag: req.body.tag,
+    peerIDs: req.body.peerIDs,
+    done: false
+  }, function(err, tag) {
+    if (err)
+      res.send(err);
+
+      // get and return all the user after you create another
+      Tag.find(function(err, tag) {
+        if (err)
+          res.send(err);
+          res.json(tag);
+        });
+      });
+
+    });
+
+// delete a tag
+app.delete('/api/tag/:tag_id', function(req, res) {
+  Tag.remove({
+    _id: req.params.tag_id
+  }, function(err, tag) {
+    if (err)
+      res.send(err);
+
+      // get and return all the user after you create another
+      Tag.find(function(err, tags) {
+        if (err)
+          res.send(err);
+          res.json(tags);
+        });
+      });
+    });
 
 // application -------------------------------------------------------------
 app.get('*', function(req, res) {
