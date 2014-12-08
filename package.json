@@ -5,11 +5,17 @@
 	"main"         : "server.js",
 	"author"       : "Dayne Davis",
 	"dependencies" : {
-		"express"         : "~4.6.1",
+		"bcrypt-nodejs"   : "latest",
 		"bittorrent-dht"  : "~2.6.4",
 		"body-parser"     : "~1.4.3",
+		"connect-flash"   : "~0.1.1",
+		"cookie-parser"   : "~1.0.0",
+		"express"         : "~4.6.1",
+		"express-session" : "~1.0.0",
 		"mongoose"        : "~3.8.13",
 		"morgan"          : "~1.1.1",
-		"method-override" : "~2.1.1"
+		"method-override" : "~2.1.1",
+		"passport"        : "~0.1.17",
+		"passport-local"  : "~0.1.6"
 	}
 }
