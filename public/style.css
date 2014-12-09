@@ -1,1 +1,59 @@
-
+.sideBox {
+  float: left;
+  height: 50px;
+  width: 200px;
+  background-color: #fff;
+  padding: 10px;
+  margin: 5px;
+  border: 1px solid #ccc;
+}
+.connection {
+  float: left;
+  height: 250px;
+  width: 200px;
+  overflow: scroll;
+  background-color: #fff;
+  padding: 10px;
+  margin: 5px;
+  border: 1px solid #ccc;
+}
+.connection div {
+  margin: 5px 0;
+}
+.connection.active {
+  border-color: #77b300;
+}
+h3 {
+  font-size: 15px;
+  padding: 5px 10px;
+  margin: 0 -10px 0 -10px;
+  border-bottom: 1px solid #ccc;
+  font-weight: 300;
+}
+.active h3 strong {
+  color: #77b300;
+}
+.file, em {
+  color: #999;
+  font-style: italic;
+}
+.clear {
+  clear: both;
+}
+.peer {
+  color: #77b300;
+  font-weight: 600;
+}
+.you {
+  color: #0C6BA1;
+  font-weight: 600;
+}
+#pid {
+  display: inline-block;
+  padding: 5px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #77b300;
+  font-weight: 600;
+}
