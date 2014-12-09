@@ -2,16 +2,13 @@ angular.module('appService', [])
 
 // super simple service
 // each function returns a promise object
-.factory('Todos', ['$http',function($http) {
+.factory('Users', ['$http',function($http) {
 	return {
 		get : function() {
-			return $http.get('/api/todos');
+			return $http.get('/api/users');
 		},
-		create : function(todoData) {
-			return $http.post('/api/todos', todoData);
-		},
-		delete : function(id) {
-			return $http.delete('/api/todos/' + id);
+		updatePeerID : function(username) {
+			return $http.delete('/api/todos/' + id );
 		}
 	}
 }]);

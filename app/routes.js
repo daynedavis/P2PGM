@@ -61,6 +61,24 @@ app.delete('/api/user/:user_id', function(req, res) {
   });
 });
 
+// update peerID
+app.put('/api/user/:username/:peer_id', function(req, res) {
+  User.findOne({username: 'Dayne'},
+   function(err, user) {
+    if (err)
+      res.send(err);
+
+      res.json({message: user});
+    /*user.save(function(err) {
+      if (err)
+        res.send(err);
+
+        res.json({ message: user.peerID });
+      });*/
+
+      });
+});
+
 // Tags -------------------------------------------------------------------
 
 // get all tags
