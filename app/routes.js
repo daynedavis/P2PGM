@@ -129,8 +129,8 @@ app.get('/register', function(req, res) {
   res.sendfile('./public/register.html'); // load the single view file (angular will handle the page changes on the front-end)
 });
 
-app.get('/user', isLoggedIn, function(req, res) {
-  res.sendfile('./public/user.html', {
+app.get('/', isLoggedIn, function(req, res) {
+  res.sendfile('./public/app.html', {
     user: req.user
   }); // load the single view file (angular will handle the page changes on the front-end)
 });
@@ -141,7 +141,7 @@ app.get('/logout', function(req, res) {
 });
 
 app.post('/register', passport.authenticate('local-signup', {
-  successRedirect : '/user',
+  successRedirect : '/',
 
   failureRedirect : '/register',
 
@@ -149,7 +149,7 @@ app.post('/register', passport.authenticate('local-signup', {
 }));
 
 app.post('/login', passport.authenticate('local-login', {
-  successRedirect : '/user',
+  successRedirect : '/',
 
   failureRedirect : '/login',
 
