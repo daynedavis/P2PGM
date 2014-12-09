@@ -7,6 +7,9 @@
   margin: 5px;
   border: 1px solid #ccc;
 }
+.hide {
+	visibility:hidden;
+	}
 .connection {
 border-color: #77b300;
   float: left;
@@ -66,3 +69,4 @@ h3 {
   color: #77b300;
   font-weight: 600;
 }
+
