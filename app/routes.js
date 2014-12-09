@@ -63,18 +63,21 @@ app.delete('/api/user/:user_id', function(req, res) {
 
 // update peerID
 app.put('/api/user/:username/:peer_id', function(req, res) {
-  User.findOne({username: 'Dayne'},
+  User.findById(
+    "548785cf0a4f7466c7b260f0",
    function(err, user) {
+    // if there are any errors, return the error
     if (err)
       res.send(err);
 
-      res.json({message: user});
-    /*user.save(function(err) {
-      if (err)
-        res.send(err);
+      user.peerID = '767';
+      user.save(function(err) {
+        if (err)
+          res.send(err);
 
-        res.json({ message: user.peerID });
-      });*/
+          res.json({ message: 'User updated!' });
+        });
+      // check to see if theres already a user with that email
 
       });
 });

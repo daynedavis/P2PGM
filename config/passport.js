@@ -46,7 +46,7 @@ module.exports = function(passport) {
         // find a user whose email is the same as the forms email
         // we are checking to see if the user trying to login already exists
         User.findOne({
-          'user.username': email
+          'username': email
         }, function(err, user) {
           // if there are any errors, return the error
           if (err)
@@ -62,9 +62,9 @@ module.exports = function(passport) {
             var newUser = new User();
 
             // set the user's local credentials
-            newUser.user.username = email;
-            newUser.user.password = newUser.generateHash(password);
-            newUser.user.peerID = '123';
+            newUser.username = email;
+            newUser.password = newUser.generateHash(password);
+            newUser.peerID = '123';
 
             // save the user
             newUser.save(function(err) {
@@ -97,7 +97,7 @@ module.exports = function(passport) {
       // find a user whose email is the same as the forms email
       // we are checking to see if the user trying to login already exists
       User.findOne({
-        'user.username': email
+        'username': email
       }, function(err, user) {
         // if there are any errors, return the error before anything else
         if (err)
