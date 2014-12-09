@@ -8,6 +8,11 @@
 	<link rel="stylesheet" href="cyborg.css" type="text/css">
 	<link rel="stylesheet" href="style.css" type="text/css">
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+
+	<script src="js/controllers/main.js"></script>
+	<script src="js/services/service.js"></script>
+	<script src="js/core.js"></script>
 	<script type="text/javascript" src="js/peer.js"></script>
 	<script>
 	// Connect to PeerJS, have server assign an ID instead of providing one
@@ -38,7 +43,7 @@
 
 	peer.on('error', function(err) {
 		console.log(err);
-	})
+	});
 	// keeps track of the # of current boxes
 	var chatboxes = 0;
 	// Handle a connection object.
@@ -60,8 +65,8 @@
 					$(this).removeClass('active');
 				}
 			});
-			
-			
+
+
 			$('.filler').hide();
 			/*if(chatboxes === 0)
 			{*/
@@ -72,8 +77,8 @@
 				$('#connections').append(chatbox).addClass('hide').append(sidebar);
 				chatboxes++;
 			}*/
-			
-			
+
+
 
 			c.on('data', function(data) {
 				messages.append('<div><span class="peer">' + c.peer + '</span>: ' + data +
@@ -82,7 +87,7 @@
 				c.on('close', function() {
 					alert(c.peer + ' has left the chat.');
 					chatbox.remove();
-					
+
 					if ($('.connection').length === 0) {
 						$('.filler').show();
 					}
@@ -183,7 +188,7 @@
 
 	 </script>
 </head>
-<body>
+<body ng-controller="mainController">
 	<a href="/logout" class="btn btn-default btn-sm">Logout</a>
 	<div class="row">
 			<div class="col-lg-12 col-md-offset-1">
