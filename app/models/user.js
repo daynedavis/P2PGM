@@ -1,7 +1,26 @@
 var mongoose = require('mongoose');
+var bcrypt = require('bcrypt-nodejs');
 
-module.exports = mongoose.model('user', {
-	username : {type : String, default: ''},
-	password : {type : String, default: ''},
-	peerID : {type : String, default: ''}
+var userSchema = mongoose.Schema({
+
+	user       :{
+		username : String,
+		password : String,
+		peerID   : String
+	}
+
 });
+
+// methods ===================================
+// generating a hash
+userSchema.methods.generateHash = function(password) {
+	return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+};
+
+// check if password is valid
+userSchema.methods.validPassword = function(password) {
+	return bcrypt.compareSync(password, this.user.password);
+};
+
+// create the model for users and expose it to our app
+module.exports = mongoose.model('user', userSchema);

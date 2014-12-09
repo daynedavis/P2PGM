@@ -1,7 +1,7 @@
 var User = require('./models/user');
 var Tag = require('./models/tag');
 
-module.exports = function(app) {
+module.exports = function(app, passport) {
 
 // api ===================================================================
 
@@ -129,7 +129,38 @@ app.get('/register', function(req, res) {
   res.sendfile('./public/register.html'); // load the single view file (angular will handle the page changes on the front-end)
 });
 
-app.get('/', function(req, res) {
-  res.sendfile('./public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+app.get('/', isLoggedIn, function(req, res) {
+  res.sendfile('./public/index.html', {
+    user: req.user
+  }); // load the single view file (angular will handle the page changes on the front-end)
 });
+
+app.get('/logout', function(req, res) {
+  req.logout();
+  res.redirect('/login');
+});
+
+app.post('/register', passport.authenticate('local-signup', {
+  successRedirect : '/',
+
+  failureRedirect : '/register',
+
+  failureFlash : true
+}));
+
+app.post('/login', passport.authenticate('local-login', {
+  successRedirect : '/',
+
+  failureRedirect : '/login',
+
+  failureFlash : true
+}));
+
 };
+
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated())
+    return next();
+
+  res.redirect('/login');
+}
