@@ -39,28 +39,41 @@
 	peer.on('error', function(err) {
 		console.log(err);
 	})
-
+	// keeps track of the # of current boxes
+	var chatboxes = 0;
 	// Handle a connection object.
 	function connect(c) {
 		// Handle a chat connection.
 		if (c.label === 'chat') {
-			var chatbox = $('<div></div>').addClass('connection').addClass('active').attr('id', c.peer);
-			var sidebar = $('<div></div>').addClass('sideBox');
+			var chatbox = $('<div></div>').addClass('connection').attr('id', c.peer);
+			var sidebar = $('<div></div>').addClass('sidebox').attr('id', c.peer);
 			var header = $('<h3></h3>').html('Chat with <strong>' + c.peer + '</strong>');
 			var messages = $('<div><em>Peer connected.</em></div>').addClass('messages');
 			chatbox.append(header);
 			chatbox.append(messages);
 
 			// Select connection handler.
-			/*chatbox.on('click', function() {
+			sidebar.on('click', function() {
 				if ($(this).attr('class').indexOf('active') === -1) {
 					$(this).addClass('active');
 				} else {
 					$(this).removeClass('active');
 				}
-			});*/
+			});
+			
+			
 			$('.filler').hide();
-			$('#connections').append(chatbox).append(sidebar);
+			if(chatboxes === 0)
+			{
+				$('#connections').append(chatbox).append(sidebar).addClass('active');
+				chatboxes++;
+			}
+			else {
+				$('#connections').append(sidebar);
+				chatboxes++;
+			}
+			
+			
 
 			c.on('data', function(data) {
 				messages.append('<div><span class="peer">' + c.peer + '</span>: ' + data +
@@ -69,6 +82,7 @@
 				c.on('close', function() {
 					alert(c.peer + ' has left the chat.');
 					chatbox.remove();
+					
 					if ($('.connection').length === 0) {
 						$('.filler').show();
 					}
