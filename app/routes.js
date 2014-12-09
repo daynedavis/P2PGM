@@ -4,7 +4,9 @@ var Tag = require('./models/tag');
 module.exports = function(app) {
 
 // api ===================================================================
+
 // Users -----------------------------------------------------------------
+
 // get all todos
 app.get('/api/user', function(req, res) {
 
@@ -114,8 +116,20 @@ app.delete('/api/tag/:tag_id', function(req, res) {
       });
     });
 
+// End API =================================================================
+
+
 // application -------------------------------------------------------------
-app.get('*', function(req, res) {
+
+app.get('/login', function(req, res) {
+  res.sendfile('./public/login.html'); // load the single view file (angular will handle the page changes on the front-end)
+});
+
+app.get('/register', function(req, res) {
+  res.sendfile('./public/register.html'); // load the single view file (angular will handle the page changes on the front-end)
+});
+
+app.get('/', function(req, res) {
   res.sendfile('./public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
 });
 };
