@@ -45,7 +45,21 @@
 			}
 		});
 		return id.responseText;
+	};
 
+	idToUsername = function (id) {
+		var name = $.ajax({
+			type: "get",
+			async: false,
+			url: ("http://localhost:8080/api/ID/" + id),
+			success: function (msg) {
+				console.log(msg);
+			},
+			error: function (err){
+				console.log('Error');
+			}
+		});
+		return name.responseText;
 	};
 
 	var connectedPeers = {};
@@ -80,7 +94,7 @@
 		if (c.label === 'chat') {
 			var chatbox = $('<div></div>').addClass('connection').addClass('active').attr('id', c.peer);
 			//var sidebar = $('<div></div>').addClass('sidebox');
-			var header = $('<h3></h3>').html('Chat with <strong>' + c.peer + '</strong>');
+			var header = $('<h3></h3>').html('Chat with <strong>' + idToUsername(c.peer) + '</strong>');
 			var messages = $('<div><em>Peer connected.</em></div>').addClass('messages');
 			chatbox.append(header);
 			chatbox.append(messages);

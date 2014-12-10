@@ -93,6 +93,18 @@ app.get('/api/user/:username', function(req, res) {
       });
     });
 
+// get username from peerID
+app.get('/api/ID/:peerID', function(req, res) {
+  var query = User.where({peerID: req.params.peerID});
+  query.findOne(function(err, user) {
+    // if there are any errors, return the error
+    if (err)
+      res.send(err);
+      res.send(user.username);
+
+    });
+  });
+
 // Tags -------------------------------------------------------------------
 
 // get all tags
