@@ -69,7 +69,7 @@
 
 		getTags = function() {
 			var tester;
-      var tags = [];
+            var tags = [];
 			var name = $.ajax({
 				type: "get",
 				async: false,
@@ -153,6 +153,7 @@
     function connect(c) {
     	// Handle a chat connection.
     	if (c.label === 'chat') {
+
     		var chatbox = $('<div></div>').addClass('connection').addClass('active').attr('id', c.peer);
     		//var sidebar = $('<div></div>').addClass('sidebox');
     		var header = $('<h3></h3>').html('Chat with <strong>' + idToUsername(c.peer) + '</strong>');
@@ -169,10 +170,9 @@
     				$(this).removeClass('active');
     			}
     		});
-
-
-
-    		$('.filler').hide();
+            $('.filler').hide();
+            $('#tabs').append('<li><a href="#'+c.peer+'" data-toggle="tab">'+ c.peer +'</a></li>');
+            $('#my-tab-content').append('<div class="tab-pane" id="'+ c.peer +'"><p class="text-success">Hi '+c.peer+'</p></div>');
     		/*if(chatboxes === 0)
     		{*/
     		$('#connections').append(chatbox); //.append(sidebar);
@@ -398,35 +398,16 @@
         <div class="row">
             <div class="col-md-2 col-md-offset-1">
                 <ul id="tabs" class="nav nav-tabs nav-stacked" data-tabs="tabs">
-                    <li class="active"><a href="#red" data-toggle="tab">Dayne</a></li>
-                    <li><a href="#orange" data-toggle="tab">Jordan</a></li>
-                    <li><a href="#yellow" data-toggle="tab">Walt</a></li>
-                    <li><a href="#green" data-toggle="tab">Jesse</a></li>
-                    <li><a href="#blue" data-toggle="tab">Gus</a></li>
+                    <span class="filler">You haven't made any connections</span>
                 </ul>
             </div>
             <div class="col-md-4">
                 <div id="my-tab-content" class="tab-content">
-                    <div class="tab-pane active" id="red">
-                        <p class="text-success">Dayne: Yo bro whats up?</p>
-                    </div>
-                    <div class="tab-pane" id="orange">
-                        <p class="text-success">Jordan: Heading to the PSK, brb</p>
-                        <p class="text-success">You: More like the PSGayyyyyy</p>
-                    </div>
-                    <div class="tab-pane" id="yellow">
-                        <p class="text-success">Walt: I am the one who knocks.</p>
-                    </div>
-                    <div class="tab-pane" id="green">
-                        <p class="text-success">Jesse: Yo bitch!</p>
-                    </div>
-                    <div class="tab-pane" id="blue">
-                        <p class="text-success">Gus: wusssssssssssup</p>
-                    </div>
+                    
                 </div>
             </div>
         </div>
-    </div>  
+    </div><br><br><br>  
 
 
 
