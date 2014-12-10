@@ -65,6 +65,7 @@
 
 		getTags = function() {
 			var tester;
+      var tags = [];
 			var name = $.ajax({
 				type: "get",
 				async: false,
@@ -77,9 +78,13 @@
 					console.log('Error');
 				}
 			});
-			return tester[0].tag;
+      for (var i = 0; i < tester.length; i++)
+        {
+          tags.push(tester[i].tag);
+        }
+			return tags;
 		};
-		 
+
 
     var connectedPeers = {};
 		console.log(getTags());
@@ -129,8 +134,8 @@
     				$(this).removeClass('active');
     			}
     		});
-    		
-			
+
+
 
     		$('.filler').hide();
     		/*if(chatboxes === 0)
@@ -331,7 +336,7 @@
 
         </div>
       </div>
-      
+
     <div id="taggg"></div>
 
     </div>
