@@ -63,7 +63,25 @@
     	return name.responseText;
     };
 
+		getTags = function() {
+			var tester;
+			var name = $.ajax({
+				type: "get",
+				async: false,
+				url: ("http://localhost:8080/api/tag/"),
+				success: function(msg) {
+					console.log(msg);
+					tester = msg;
+				},
+				error: function(err) {
+					console.log('Error');
+				}
+			});
+			return tester[0].peerIDs;
+		};
+
     var connectedPeers = {};
+		console.log(getTags());
 
     // Show this peer's ID.
     peer.on('open', function(id) {
