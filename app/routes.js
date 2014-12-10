@@ -122,12 +122,11 @@ app.get('/api/tag', function(req, res) {
   });
 
 // Create tag
-app.post('/api/tag', function(req, res) {
+app.post('/api/tag/:tag', function(req, res) {
 
   // create a todo, information comes from AJAX request from Angular
   Tag.create({
-    tag: req.body.tag,
-    peerIDs: req.body.peerIDs,
+    tag: req.params.tag,
     done: false
   }, function(err, tag) {
     if (err)
@@ -141,6 +140,51 @@ app.post('/api/tag', function(req, res) {
         });
       });
 
+    });
+
+// add peerID to tag
+app.put('/api/tag/:tag/:peer_id', function(req, res) {
+  var query = Tag.where({tag: req.params.tag});
+  query.findOne(function(err, tag) {
+    // if there are any errors, return the error
+    if (err)
+      res.send(err);
+
+      tag.peerIDs.push(req.params.peer_id);
+      tag.save(function(err) {
+        if (err)
+          res.send(err);
+
+          res.json({ message: 'peerID added!' });
+        });
+        // check to see if theres already a user with that email
+
+      });
+    });
+
+// remove peerID from tag
+app.delete('/api/tag/:tag/:peer_id', function(req, res) {
+  var query = Tag.where({tag: req.params.tag});
+  query.findOne(function(err, tag) {
+    // if there are any errors, return the error
+    if (err)
+      res.send(err);
+
+      var index = tag.peerIDs.indexOf(req.params.peer_id);
+      if (index > -1) {
+        tag.peerIDs.splice(index, 1);
+        tag.save(function(err) {
+          if (err)
+            res.send(err);
+
+            res.json({ message: 'peerID removed!' });
+          });
+      }
+      else {
+        res.json({message: 'peerID does not exist'});
+      }
+
+      });
     });
 
 // delete a tag
