@@ -85,6 +85,19 @@
 			return tags;
 		};
 
+    createTag = function(tag) {
+      $.ajax({
+        type: "post",
+        async: false,
+        url: ("http://localhost:8080/api/tag/" + tag),
+        success: function(msg) {
+          console.log(msg);
+        },
+        error: function(err) {
+          console.log('Error');
+        }
+      });
+    };
 
     var connectedPeers = {};
 		console.log(getTags());
@@ -183,6 +196,14 @@
     }
 
     $(document).ready(function() {
+
+      $('#createNewTag').on('click', function () {
+        if ($('#newTag').val()) {
+          createTag($('#newTag').val());
+          $('#tagg').append("<option>" + $('#newTag').val() + "</option>");
+        }
+        $('#newTag').val('');
+      });
     	// Connect to a peer
     	$('#connect').click(function() {
     		var requestedPeer = usernameToID($('#rid').val());
