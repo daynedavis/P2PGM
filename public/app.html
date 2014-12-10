@@ -77,14 +77,16 @@
 					console.log('Error');
 				}
 			});
-			return tester[0].peerIDs;
+			return tester[0].tag;
 		};
+		 
 
     var connectedPeers = {};
 		console.log(getTags());
 
     // Show this peer's ID.
     peer.on('open', function(id) {
+    	$('#tagg').append("<option>" + getTags() + "</option>");
     	var username = localStorage.getItem('username');
     	$.ajax({
     		type: "put",
@@ -115,6 +117,7 @@
     		//var sidebar = $('<div></div>').addClass('sidebox');
     		var header = $('<h3></h3>').html('Chat with <strong>' + idToUsername(c.peer) + '</strong>');
     		var messages = $('<div><em>Peer connected.</em></div>').addClass('messages');
+    		var select = $('<option value ="hey"></option>');
     		chatbox.append(header);
     		chatbox.append(messages);
 
@@ -126,7 +129,8 @@
     				$(this).removeClass('active');
     			}
     		});
-
+    		
+			
 
     		$('.filler').hide();
     		/*if(chatboxes === 0)
@@ -292,12 +296,12 @@
         <div class="well bs-component">
           <p class="text-info">Select tags to subscribe to</p>
           <div>
-            <select multiple class="form-control text-info">
-              <option>HarvardFootball</option>
+            <select multiple id="tagg" class="form-control text-info">
+              <!--<option>HarvardFootball</option>
               <option>ComputerScience</option>
               <option>Parties</option>
               <option>Politics</option>
-              <option>Taggggs</option>
+              <option>Taggggs</option>-->
             </select>
             <br>
             <button type="button" class="btn btn-info btn-block">Subscribe</button>
@@ -327,6 +331,8 @@
 
         </div>
       </div>
+      
+    <div id="taggg"></div>
 
     </div>
   </div>
