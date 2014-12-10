@@ -91,7 +91,11 @@
 
     // Show this peer's ID.
     peer.on('open', function(id) {
-    	$('#tagg').append("<option>" + getTags() + "</option>");
+    	var receivedTags = getTags();
+    	for(var i = 0; i < receivedTags.length; i++)
+    	{
+    		$('#tagg').append("<option>" + receivedTags[i] + "</option>");
+    	}
     	var username = localStorage.getItem('username');
     	$.ajax({
     		type: "put",
