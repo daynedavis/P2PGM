@@ -31,11 +31,39 @@
 			$('.log').append(copy + '<br>');
 		}
 	});
+
+	usernameToID = function (username) {
+		var id = $.ajax({
+			type: "get",
+			async: false,
+			url: ("http://localhost:8080/api/user/" + username),
+			success: function (msg) {
+				console.log(msg);
+			},
+			error: function (err){
+				console.log('Error');
+			}
+		});
+		return id.responseText;
+
+	};
+
 	var connectedPeers = {};
 
 	// Show this peer's ID.
 	peer.on('open', function(id){
-		$('#pid').text(id);
+		var username = localStorage.getItem('username');
+		$.ajax({
+			type: "put",
+			url: ("http://localhost:8080/api/user/" + username + "/" + id),
+			success: function (msg) {
+				console.log('Success');
+			},
+			error: function (err){
+				console.log('Error');
+			}
+		});
+		$('#pid').text(username);
 	});
 
 	// Await connections from others
@@ -111,7 +139,8 @@
 			$(document).ready(function() {
 				// Connect to a peer
 				$('#connect').click(function() {
-					var requestedPeer = $('#rid').val();
+					var requestedPeer = usernameToID($('#rid').val());
+					console.log(usernameToID($('#rid').val()));
 					if (!connectedPeers[requestedPeer]) {
 						// Create 2 connections, one labelled chat and another labelled file.
 						var c = peer.connect(requestedPeer, {
@@ -248,7 +277,7 @@
 
 				</div>
 			</div>
-			
+
 		</div>
 </div>
 
