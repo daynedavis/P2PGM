@@ -1,119 +1,120 @@
 <!DOCTYPE HTML>
 <html lang="en">
+
 <head>
-	<title>MsgFlood Doe</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<meta http-equiv="Content-Language" content="en-us">
+  <title>MsgFlood Doe</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Language" content="en-us">
 
-	<link rel="stylesheet" href="cyborg.css" type="text/css">
-	<link rel="stylesheet" href="style.css" type="text/css">
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+  <link rel="stylesheet" href="cyborg.css" type="text/css">
+  <link rel="stylesheet" href="style.css" type="text/css">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
 
-	<script src="js/controllers/main.js"></script>
-	<script src="js/services/service.js"></script>
-	<script src="js/core.js"></script>
-	<script type="text/javascript" src="js/peer.js"></script>
-	<script>
-	// Connect to PeerJS, have server assign an ID instead of providing one
-	// Showing off some of the configs available with PeerJS :).
-	var peer = new Peer({
-		// Set API key for cloud server (you don't need this if you're running your
-		// own.
-		key: 'x7fwx2kavpy6tj4i',
+  <script src="js/controllers/main.js"></script>
+  <script src="js/services/service.js"></script>
+  <script src="js/core.js"></script>
+  <script type="text/javascript" src="js/peer.js"></script>
+  <script>
+    // Connect to PeerJS, have server assign an ID instead of providing one
+    // Showing off some of the configs available with PeerJS :).
+    var peer = new Peer({
+    	// Set API key for cloud server (you don't need this if you're running your
+    	// own.
+    	key: 'x7fwx2kavpy6tj4i',
 
-		// Set highest debug level (log everything!).
-		debug: 0,
+    	// Set highest debug level (log everything!).
+    	debug: 0,
 
-		// Set a logging function:
-		logFunction: function() {
-			var copy = Array.prototype.slice.call(arguments).join(' ');
-			$('.log').append(copy + '<br>');
-		}
-	});
+    	// Set a logging function:
+    	logFunction: function() {
+    		var copy = Array.prototype.slice.call(arguments).join(' ');
+    		$('.log').append(copy + '<br>');
+    	}
+    });
 
-	usernameToID = function (username) {
-		var id = $.ajax({
-			type: "get",
-			async: false,
-			url: ("http://localhost:8080/api/user/" + username),
-			success: function (msg) {
-				console.log(msg);
-			},
-			error: function (err){
-				console.log('Error');
-			}
-		});
-		return id.responseText;
-	};
+    usernameToID = function(username) {
+    	var id = $.ajax({
+    		type: "get",
+    		async: false,
+    		url: ("http://localhost:8080/api/user/" + username),
+    		success: function(msg) {
+    			console.log(msg);
+    		},
+    		error: function(err) {
+    			console.log('Error');
+    		}
+    	});
+    	return id.responseText;
+    };
 
-	idToUsername = function (id) {
-		var name = $.ajax({
-			type: "get",
-			async: false,
-			url: ("http://localhost:8080/api/ID/" + id),
-			success: function (msg) {
-				console.log(msg);
-			},
-			error: function (err){
-				console.log('Error');
-			}
-		});
-		return name.responseText;
-	};
+    idToUsername = function(id) {
+    	var name = $.ajax({
+    		type: "get",
+    		async: false,
+    		url: ("http://localhost:8080/api/ID/" + id),
+    		success: function(msg) {
+    			console.log(msg);
+    		},
+    		error: function(err) {
+    			console.log('Error');
+    		}
+    	});
+    	return name.responseText;
+    };
 
-	var connectedPeers = {};
+    var connectedPeers = {};
 
-	// Show this peer's ID.
-	peer.on('open', function(id){
-		var username = localStorage.getItem('username');
-		$.ajax({
-			type: "put",
-			url: ("http://localhost:8080/api/user/" + username + "/" + id),
-			success: function (msg) {
-				console.log('Success');
-			},
-			error: function (err){
-				console.log('Error');
-			}
-		});
-		$('#pid').text(username);
-	});
+    // Show this peer's ID.
+    peer.on('open', function(id) {
+    	var username = localStorage.getItem('username');
+    	$.ajax({
+    		type: "put",
+    		url: ("http://localhost:8080/api/user/" + username + "/" + id),
+    		success: function(msg) {
+    			console.log('Success');
+    		},
+    		error: function(err) {
+    			console.log('Error');
+    		}
+    	});
+    	$('#pid').text(username);
+    });
 
-	// Await connections from others
-	peer.on('connection', connect);
+    // Await connections from others
+    peer.on('connection', connect);
 
-	peer.on('error', function(err) {
-		console.log(err);
-	});
-	// keeps track of the # of current boxes
-	var chatboxes = 0;
-	// Handle a connection object.
-	function connect(c) {
-		// Handle a chat connection.
-		if (c.label === 'chat') {
-			var chatbox = $('<div></div>').addClass('connection').addClass('active').attr('id', c.peer);
-			//var sidebar = $('<div></div>').addClass('sidebox');
-			var header = $('<h3></h3>').html('Chat with <strong>' + idToUsername(c.peer) + '</strong>');
-			var messages = $('<div><em>Peer connected.</em></div>').addClass('messages');
-			chatbox.append(header);
-			chatbox.append(messages);
+    peer.on('error', function(err) {
+    	console.log(err);
+    });
+    // keeps track of the # of current boxes
+    var chatboxes = 0;
+    // Handle a connection object.
+    function connect(c) {
+    	// Handle a chat connection.
+    	if (c.label === 'chat') {
+    		var chatbox = $('<div></div>').addClass('connection').addClass('active').attr('id', c.peer);
+    		//var sidebar = $('<div></div>').addClass('sidebox');
+    		var header = $('<h3></h3>').html('Chat with <strong>' + idToUsername(c.peer) + '</strong>');
+    		var messages = $('<div><em>Peer connected.</em></div>').addClass('messages');
+    		chatbox.append(header);
+    		chatbox.append(messages);
 
-			// Select connection handler.
-			chatbox.on('click', function() {
-				if ($(this).attr('class').indexOf('active') === -1) {
-					$(this).addClass('active');
-				} else {
-					$(this).removeClass('active');
-				}
-			});
+    		// Select connection handler.
+    		chatbox.on('click', function() {
+    			if ($(this).attr('class').indexOf('active') === -1) {
+    				$(this).addClass('active');
+    			} else {
+    				$(this).removeClass('active');
+    			}
+    		});
 
 
-			$('.filler').hide();
-			/*if(chatboxes === 0)
-			{*/
-				$('#connections').append(chatbox);//.append(sidebar);
-				/*chatboxes++;
+    		$('.filler').hide();
+    		/*if(chatboxes === 0)
+    		{*/
+    		$('#connections').append(chatbox); //.append(sidebar);
+    		/*chatboxes++;
 			}
 			else {
 				$('#connections').append(chatbox).addClass('hide').append(sidebar);
@@ -122,178 +123,195 @@
 
 
 
-			c.on('data', function(data) {
-				messages.append('<div><span class="peer">' + c.peer + '</span>: ' + data +
-					'</div>');
-				});
-				c.on('close', function() {
-					alert(c.peer + ' has left the chat.');
-					chatbox.remove();
+    		c.on('data', function(data) {
+    			messages.append('<div><span class="peer">' + c.peer + '</span>: ' + data +
+    				'</div>');
+    		});
+    		c.on('close', function() {
+    			alert(c.peer + ' has left the chat.');
+    			chatbox.remove();
 
-					if ($('.connection').length === 0) {
-						$('.filler').show();
-					}
-					delete connectedPeers[c.peer];
-				});
-			} else if (c.label === 'file') {
-				c.on('data', function(data) {
-					// If we're getting a file, create a URL for it.
-					if (data.constructor === ArrayBuffer) {
-						var dataView = new Uint8Array(data);
-						var dataBlob = new Blob([dataView]);
-						var url = window.URL.createObjectURL(dataBlob);
-						$('#' + c.peer).find('.messages').append('<div><span class="file">' +
-							c.peer + ' has sent you a <a target="_blank" href="' + url + '">file</a>.</span></div>');
-						}
-					});
-				}
-				connectedPeers[c.peer] = 1;
-			}
+    			if ($('.connection').length === 0) {
+    				$('.filler').show();
+    			}
+    			delete connectedPeers[c.peer];
+    		});
+    	} else if (c.label === 'file') {
+    		c.on('data', function(data) {
+    			// If we're getting a file, create a URL for it.
+    			if (data.constructor === ArrayBuffer) {
+    				var dataView = new Uint8Array(data);
+    				var dataBlob = new Blob([dataView]);
+    				var url = window.URL.createObjectURL(dataBlob);
+    				$('#' + c.peer).find('.messages').append('<div><span class="file">' +
+    					c.peer + ' has sent you a <a target="_blank" href="' + url + '">file</a>.</span></div>');
+    			}
+    		});
+    	}
+    	connectedPeers[c.peer] = 1;
+    }
 
-			$(document).ready(function() {
-				// Connect to a peer
-				$('#connect').click(function() {
-					var requestedPeer = usernameToID($('#rid').val());
-					console.log(usernameToID($('#rid').val()));
-					if (!connectedPeers[requestedPeer]) {
-						// Create 2 connections, one labelled chat and another labelled file.
-						var c = peer.connect(requestedPeer, {
-							label: 'chat',
-							serialization: 'none',
-							metadata: {message: 'hi i want to chat with you!'}
-						});
-						c.on('open', function() {
-							connect(c);
-						});
-						c.on('error', function(err) { alert(err); });
-						var f = peer.connect(requestedPeer, { label: 'file', reliable: true });
-						f.on('open', function() {
-							connect(f);
-						});
-						f.on('error', function(err) { alert(err); });
-					}
-					connectedPeers[requestedPeer] = 1;
-				});
+    $(document).ready(function() {
+    	// Connect to a peer
+    	$('#connect').click(function() {
+    		var requestedPeer = usernameToID($('#rid').val());
+    		console.log(usernameToID($('#rid').val()));
+    		if (!connectedPeers[requestedPeer]) {
+    			// Create 2 connections, one labelled chat and another labelled file.
+    			var c = peer.connect(requestedPeer, {
+    				label: 'chat',
+    				serialization: 'none',
+    				metadata: {
+    					message: 'hi i want to chat with you!'
+    				}
+    			});
+    			c.on('open', function() {
+    				connect(c);
+    			});
+    			c.on('error', function(err) {
+    				alert(err);
+    			});
+    			var f = peer.connect(requestedPeer, {
+    				label: 'file',
+    				reliable: true
+    			});
+    			f.on('open', function() {
+    				connect(f);
+    			});
+    			f.on('error', function(err) {
+    				alert(err);
+    			});
+    		}
+    		connectedPeers[requestedPeer] = 1;
+    	});
 
-				// Close a connection.
-				$('#close').click(function() {
-					eachActiveConnection(function(c) {
-						c.close();
-					});
-				});
+    	// Close a connection.
+    	$('#close').click(function() {
+    		eachActiveConnection(function(c) {
+    			c.close();
+    		});
+    	});
 
-				// Send a chat message to all active connections.
-				$('#send').submit(function(e) {
-					e.preventDefault();
-					// For each active connection, send the message.
-					var msg = $('#text').val();
-					eachActiveConnection(function(c, $c) {
-						if (c.label === 'chat') {
-							c.send(msg);
-							$c.find('.messages').append('<div><span class="you">You: </span>' + msg
-								+ '</div>');
-							}
-						});
-						$('#text').val('');
-						$('#text').focus();
-					});
+    	// Send a chat message to all active connections.
+    	$('#send').submit(function(e) {
+    		e.preventDefault();
+    		// For each active connection, send the message.
+    		var msg = $('#text').val();
+    		eachActiveConnection(function(c, $c) {
+    			if (c.label === 'chat') {
+    				c.send(msg);
+    				$c.find('.messages').append('<div><span class="you">You: </span>' + msg + '</div>');
+    			}
+    		});
+    		$('#text').val('');
+    		$('#text').focus();
+    	});
 
-					// Goes through each active peer and calls FN on its connections.
-					function eachActiveConnection(fn) {
-						var actives = $('.active');
-						var checkedIds = {};
-						actives.each(function() {
-							var peerId = $(this).attr('id');
+    	// Goes through each active peer and calls FN on its connections.
+    	function eachActiveConnection(fn) {
+    		var actives = $('.active');
+    		var checkedIds = {};
+    		actives.each(function() {
+    			var peerId = $(this).attr('id');
 
-							if (!checkedIds[peerId]) {
-								var conns = peer.connections[peerId];
-								for (var i = 0, ii = conns.length; i < ii; i += 1) {
-									var conn = conns[i];
-									fn(conn, $(this));
-								}
-							}
+    			if (!checkedIds[peerId]) {
+    				var conns = peer.connections[peerId];
+    				for (var i = 0, ii = conns.length; i < ii; i += 1) {
+    					var conn = conns[i];
+    					fn(conn, $(this));
+    				}
+    			}
 
-							checkedIds[peerId] = 1;
-						});
-					}
+    			checkedIds[peerId] = 1;
+    		});
+    	}
 
-					// Show browser version
-					$('#browsers').text(navigator.userAgent);
-				});
+    	// Show browser version
+    	$('#browsers').text(navigator.userAgent);
+    });
 
-				// Make sure things clean up properly.
+    // Make sure things clean up properly.
 
-				window.onunload = window.onbeforeunload = function(e) {
-					if (!!peer && !peer.destroyed) {
-						peer.destroy();
-					}
-				};
-
-	 </script>
+    window.onunload = window.onbeforeunload = function(e) {
+    	if (!!peer && !peer.destroyed) {
+    		peer.destroy();
+    	}
+    };
+  </script>
 </head>
+
 <body ng-controller="mainController">
-	<a href="/logout" class="btn btn-default btn-sm">Logout</a>
-	<div class="row">
-			<div class="col-md-8 col-md-offset-1">
-				<h1 class="text-success">Your Flood</h1>
-				<h6>Offering secure P2P group messaging and topic-based message flooding</h6>
-			</div>
-	</div>
+  <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+  <div class="row">
+    <div class="col-md-8 col-md-offset-1">
+      <h1 class="text-success">Your Flood</h1>
+      <h6>Offering secure P2P group messaging and topic-based message flooding</h6>
+    </div>
+  </div>
 
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-md-4 col-md-offset-1">
-				<div class="well bs-component">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-4 col-md-offset-1">
+        <div class="well bs-component">
 
-						<div id="actions" class="text-success">
-							Your PeerID is: <br>
-							<span id="pid" class="form-control input-block"></span><br>
-							Connect to a peer: <input class="form-control input-block" type="text" id="rid" placeholder="Someone else's id"><br>
-							<input class="btn btn-success btn-block" type="button" value="Connect" id="connect"><br>
+          <div id="actions" class="text-success">
+            Your PeerID is:
+            <br>
+            <span id="pid" class="form-control input-block"></span>
+            <br> Connect to a peer:
+            <input class="form-control input-block" type="text" id="rid" placeholder="Someone else's id">
+            <br>
+            <input class="btn btn-success btn-block" type="button" value="Connect" id="connect">
+            <br>
 
 
-							<button id="close" class="btn btn-danger btn-block">Close selected connections</button>
-						</div>
+            <button id="close" class="btn btn-danger btn-block">Close selected connections</button>
+          </div>
 
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="well bs-component">
-					<p class="text-info">Select tags to subscribe to</p>
-					<div>
-						<select multiple class="form-control text-info">
-						  <option>HarvardFootball</option>
-						  <option>ComputerScience</option>
-						  <option>Parties</option>
-						  <option>Politics</option>
-						  <option>Taggggs</option>
-						</select><br>
-						<button type="button" class="btn btn-info btn-block">Subscribe</button><br>
-					</div>
-					<div>
-						<input class="form-control input-block" type="text" id="newTag" placeholder="Create a new tag here"><br>
-						<input class="btn btn-info btn-block" type="button" value="Create a new tag" id="createNewTag" margin-top=7>
-					</div>
-				</div>
-			</div>
-		</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="well bs-component">
+          <p class="text-info">Select tags to subscribe to</p>
+          <div>
+            <select multiple class="form-control text-info">
+              <option>HarvardFootball</option>
+              <option>ComputerScience</option>
+              <option>Parties</option>
+              <option>Politics</option>
+              <option>Taggggs</option>
+            </select>
+            <br>
+            <button type="button" class="btn btn-info btn-block">Subscribe</button>
+            <br>
+          </div>
+          <div>
+            <input class="form-control input-block" type="text" id="newTag" placeholder="Create a new tag here">
+            <br>
+            <input class="btn btn-info btn-block" type="button" value="Create a new tag" id="createNewTag" margin-top=7>
+          </div>
+        </div>
+      </div>
+    </div>
 
-		<div class="row">
-			<div class="col-lg-3 col-md-offset-1">
-				<div class="well bs-component">
-					<div id="wrap"><div id="connections"><span class="filler">You have not yet made any connections.</span></div>
-							<div class="clear"></div>
-						</div>
-					<form id="send">
-							<input type="text" id="text" placeholder="Enter message">
-							<input class="button" class="btn btn-default" type="submit" value="Send to selected peers">
-					</form>
+    <div class="row">
+      <div class="col-lg-3 col-md-offset-1">
+        <div class="well bs-component">
+          <div id="wrap">
+            <div id="connections"><span class="filler">You have not yet made any connections.</span>
+            </div>
+            <div class="clear"></div>
+          </div>
+          <form id="send">
+            <input type="text" id="text" placeholder="Enter message">
+            <input class="button" class="btn btn-default" type="submit" value="Send to selected peers">
+          </form>
 
-				</div>
-			</div>
+        </div>
+      </div>
 
-		</div>
-</div>
+    </div>
+  </div>
 
 
 
@@ -302,4 +320,5 @@
 
 
 </body>
+
 </html>
