@@ -187,8 +187,8 @@
     			}
     		});
             $('.filler').hide();
-            $('#tabs').append('<li><a href="#'+c.peer+'" data-toggle="tab">'+ idToUsername(c.peer) +'</a></li>');
-            $('#my-tab-content').append('<div class="tab-pane" id="'+ c.peer +'"><p class="text-success">Hi '+c.peer+'</p></div>');
+            $('#tabs').append('<li id=\'' + c.peer + '\'><a href="#'+c.peer+'tab" data-toggle="tab">'+ idToUsername(c.peer) +'</a></li>');
+            $('#my-tab-content').append('<div class="tab-pane" id="'+ c.peer +'tab"><p class="text-success">Hi '+c.peer+'</p></div>');
     		/*if(chatboxes === 0)
     		{*/
     		$('#connections').append(chatbox); //.append(sidebar);
@@ -202,6 +202,7 @@
 
 
     		c.on('data', function(data) {
+          console.log(data);
     			messages.append('<div><span class="peer">' + idToUsername(c.peer) + '</span>: ' + data +
     				'</div>');
     		});
@@ -307,7 +308,7 @@
     		actives.each(function() {
     			var peerId = $(this).attr('id');
 
-    			if (!checkedIds[peerId]) {
+    			if ( peerId.substr(peerId.length - 3) != 'tab' && !checkedIds[peerId]) {
     				var conns = peer.connections[peerId];
     				for (var i = 0, ii = conns.length; i < ii; i += 1) {
     					var conn = conns[i];
@@ -372,11 +373,6 @@
           <p class="text-info">Select tags to subscribe to</p>
           <div>
             <select multiple id="tagg" class="form-control text-info">
-              <!--<option>HarvardFootball</option>
-              <option>ComputerScience</option>
-              <option>Parties</option>
-              <option>Politics</option>
-              <option>Taggggs</option>-->
             </select>
             <br>
             <button type="button" id="subscribeButton" class="btn btn-info btn-block">Subscribe</button>
@@ -411,6 +407,10 @@
 
     </div><!-->
 
+    <form id="send">
+      <input type="text" id="text" placeholder="Enter message">
+      <input class="button" class="btn btn-default" type="submit" value="Send to selected peers">
+    </form>
 
     <div id="content">
         <div class="row">
