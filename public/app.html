@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="css/style.css" type="text/css">
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
-  
+
   <!-- Needed most recent Jquery version for bootsrap tabbed broswing -->
   <script type="text/javascript" src="/js/jquery.js"></script>
   <script type="text/javascript" src="/js/bootstrap.js"></script>
@@ -20,6 +20,7 @@
   <script src="js/core.js"></script>
   <script type="text/javascript" src="js/peer.js"></script>
   <script>
+  var subscribedTags = [];
     // Connect to PeerJS, have server assign an ID instead of providing one
     // Showing off some of the configs available with PeerJS :).
     var peer = new Peer({
@@ -89,16 +90,58 @@
 			return tags;
 		};
 
+    createTag = function(tag) {
+      $.ajax({
+        type: "post",
+        async: false,
+        url: ("http://localhost:8080/api/tag/" + tag),
+        success: function(msg) {
+          console.log(msg);
+        },
+        error: function(err) {
+          console.log('Error');
+        }
+      });
+    };
+
+    subscribeToTag = function(tag) {
+      $.ajax({
+        type: "put",
+        async: false,
+        url: ("http://localhost:8080/api/tag/" + tag + "/" + usernameToID(localStorage.getItem('username'))),
+        success: function(msg) {
+          console.log(msg);
+        },
+        error: function(err) {
+          console.log('Error');
+        }
+      });
+    };
+
+    removePeerIdFromTag = function(tag) {
+      $.ajax({
+        type: "delete",
+        async: false,
+        url: ("http://localhost:8080/api/tag/" + tag + "/" + usernameToID(localStorage.getItem('username'))),
+        success: function(msg) {
+          console.log(msg);
+        },
+        error: function(err) {
+          console.log('Error');
+        }
+      });
+    };
 
     var connectedPeers = {};
 		console.log(getTags());
 
     // Show this peer's ID.
     peer.on('open', function(id) {
+
     	var receivedTags = getTags();
     	for(var i = 0; i < receivedTags.length; i++)
     	{
-    		$('#tagg').append("<option>" + receivedTags[i] +  "</option>");
+    		$('#tagg').append("<option id=\"" + receivedTags[i] +"\">" + receivedTags[i] +  "</option>");
     	}
     	var username = localStorage.getItem('username');
     	$.ajax({
@@ -144,7 +187,7 @@
     			}
     		});
             $('.filler').hide();
-            $('#tabs').append('<li><a href="#'+c.peer+'" data-toggle="tab">'+ c.peer +'</a></li>');
+            $('#tabs').append('<li><a href="#'+c.peer+'" data-toggle="tab">'+ idToUsername(c.peer) +'</a></li>');
             $('#my-tab-content').append('<div class="tab-pane" id="'+ c.peer +'"><p class="text-success">Hi '+c.peer+'</p></div>');
     		/*if(chatboxes === 0)
     		{*/
@@ -159,7 +202,7 @@
 
 
     		c.on('data', function(data) {
-    			messages.append('<div><span class="peer">' + c.peer + '</span>: ' + data +
+    			messages.append('<div><span class="peer">' + idToUsername(c.peer) + '</span>: ' + data +
     				'</div>');
     		});
     		c.on('close', function() {
@@ -187,6 +230,21 @@
     }
 
     $(document).ready(function() {
+
+      $('#createNewTag').on('click', function () {
+        if ($('#newTag').val()) {
+          createTag($('#newTag').val());
+          $('#tagg').append("<option>" + $('#newTag').val() + "</option>");
+        }
+        $('#newTag').val('');
+      });
+
+      $('#subscribeButton').on('click', function () {
+          subscribeToTag($("#tagg option:selected").text());
+          subscribedTags.push($("#tagg option:selected").text());
+          console.log(subscribedTags);
+      });
+
     	// Connect to a peer
     	$('#connect').click(function() {
     		var requestedPeer = usernameToID($('#rid').val());
@@ -271,6 +329,10 @@
     	if (!!peer && !peer.destroyed) {
     		peer.destroy();
     	}
+
+      for (var i = 0; i < subscribedTags.length; i++) {
+        removePeerIdFromTag(subscribedTags[i]);
+      }
     };
   </script>
 </head>
@@ -317,7 +379,7 @@
               <option>Taggggs</option>-->
             </select>
             <br>
-            <button type="button" class="btn btn-info btn-block">Subscribe</button>
+            <button type="button" id="subscribeButton" class="btn btn-info btn-block">Subscribe</button>
             <br>
           </div>
           <div>
@@ -349,7 +411,7 @@
 
     </div><!-->
 
-    
+
     <div id="content">
         <div class="row">
             <div class="col-md-2 col-md-offset-1">
@@ -359,11 +421,11 @@
             </div>
             <div class="col-md-4">
                 <div id="my-tab-content" class="tab-content">
-                    
+
                 </div>
             </div>
         </div>
-    </div><br><br><br>  
+    </div><br><br><br>
 
 
 
