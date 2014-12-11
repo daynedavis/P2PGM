@@ -243,9 +243,13 @@
       });
 
       $('#subscribeButton').on('click', function () {
-          subscribeToTag($("#tagg option:selected").text());
-          subscribedTags.push($("#tagg option:selected").text());
+          var tagName = $("#tagg option:selected").text();
+          subscribeToTag(tagName);
+          subscribedTags.push(tagName);
           console.log(subscribedTags);
+          $('.filler').hide();
+          $('#tabs').append('<li id=\'' + tagName + '\'><a href="#'+tagName+'tab" data-toggle="tab">'+ tagName +'</a></li>');
+          $('#my-tab-content').append('<div class="tab-pane" id="'+ tagName +'tab"><p class="text-warning">Connected to tag stream '+tagName+'</p></div>');
       });
 
     	// Connect to a peer
