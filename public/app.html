@@ -44,7 +44,7 @@
     		async: false,
     		url: ("http://localhost:8080/api/user/" + username),
     		success: function(msg) {
-    			console.log(msg);
+    			//console.log(msg);
     		},
     		error: function(err) {
     			console.log('Error');
@@ -59,7 +59,7 @@
     		async: false,
     		url: ("http://localhost:8080/api/ID/" + id),
     		success: function(msg) {
-    			console.log(msg);
+    		//	console.log(msg);
     		},
     		error: function(err) {
     			console.log('Error');
@@ -76,11 +76,11 @@
 				async: false,
 				url: ("http://localhost:8080/api/tag/"),
 				success: function(msg) {
-					console.log(msg);
+					//console.log(msg);
 					tester = msg;
 				},
 				error: function(err) {
-					console.log('Error');
+					//console.log('Error');
 				}
 			});
       for (var i = 0; i < tester.length; i++)
@@ -89,6 +89,26 @@
         }
 			return tags;
 		};
+
+    getIDsInTags = function(tag) {
+      var tester;
+      var tags = [];
+      var name = $.ajax({
+        type: "get",
+        async: false,
+        url: ("http://localhost:8080/api/tag/" + tag),
+        success: function(msg) {
+          console.log(msg);
+          tester = msg;
+        },
+        error: function(err) {
+          console.log('Error');
+        }
+      });
+          tags = tester;
+
+        return tags.message;
+      };
 
     createTag = function(tag) {
       $.ajax({
@@ -110,7 +130,7 @@
         async: false,
         url: ("http://localhost:8080/api/tag/" + tag + "/" + usernameToID(localStorage.getItem('username'))),
         success: function(msg) {
-          console.log(msg);
+          //console.log(msg);
         },
         error: function(err) {
           console.log('Error');
@@ -132,8 +152,26 @@
       });
     };
 
+    inTags = function (id) {
+      var isTag = false;
+      $.each(subscribedTags, function(key, value) {
+        if (id === value)
+          isTag = true;
+      });
+      return isTag;
+    };
+
+    WhichTags = function (id) {
+      var thisTag;
+      $.each(subscribedTags, function(key, value) {
+        if (id === value)
+          thisTag = value;
+        });
+        return thisTag;
+      };
+
     var connectedPeers = {};
-		console.log(getTags());
+	//	console.log(getTags());
 
     // Show this peer's ID.
     peer.on('open', function(id) {
@@ -148,7 +186,7 @@
     		type: "put",
     		url: ("http://localhost:8080/api/user/" + username + "/" + id),
     		success: function(msg) {
-    			console.log('Success');
+    			//console.log('Success');
     		},
     		error: function(err) {
     			console.log('Error');
@@ -202,11 +240,9 @@
 
 
     		c.on('data', function(data) {
-                console.log(data);
                 $('#'+c.peer+'tab').append('<div><span class="peer">' + idToUsername(c.peer) + '</span>: ' + data +
-                    '</div>')
-    			messages.append('<div><span class="peer">' + idToUsername(c.peer) + '</span>: ' + data +
-    				'</div>');
+                    '</div>');
+
     		});
     		c.on('close', function() {
     			alert(c.peer + ' has left the chat.');
@@ -217,18 +253,17 @@
     			}
     			delete connectedPeers[c.peer];
     		});
-    	} else if (c.label === 'file') {
-    		c.on('data', function(data) {
-    			// If we're getting a file, create a URL for it.
-    			if (data.constructor === ArrayBuffer) {
-    				var dataView = new Uint8Array(data);
-    				var dataBlob = new Blob([dataView]);
-    				var url = window.URL.createObjectURL(dataBlob);
-    				$('#' + c.peer).find('.messages').append('<div><span class="file">' +
-    					c.peer + ' has sent you a <a target="_blank" href="' + url + '">file</a>.</span></div>');
-    			}
-    		});
     	}
+      else if (inTags(c.label)) {
+        console.log('else if');
+        $('#'+c.label+'tab').append('<div><span class="peer">' + idToUsername(c.peer) + '</span>: ' + c.metadata.message +
+        '</div>');
+        c.on('data', function(data) {
+          console.log('Hi');
+          $('#'+c.label+'tab').append('<div><span class="peer">' + idToUsername(c.peer) + '</span>: ' + data +
+          '</div>');
+        });
+      }
     	connectedPeers[c.peer] = 1;
     }
 
@@ -246,7 +281,7 @@
           var tagName = $("#tagg option:selected").text();
           subscribeToTag(tagName);
           subscribedTags.push(tagName);
-          console.log(subscribedTags);
+          //console.log(subscribedTags);
           $('.filler').hide();
           $('#tabs').append('<li id=\'' + tagName + '\'><a href="#'+tagName+'tab" data-toggle="tab">'+ tagName +'</a></li>');
           $('#my-tab-content').append('<div class="tab-pane" id="'+ tagName +'tab"><p class="text-warning">Connected to tag stream '+tagName+'</p></div>');
@@ -302,8 +337,15 @@
     				c.send(msg);
                     $('#'+c.peer+'tab').append('<div><span class="you">You:</span> ' + msg +
                     '</div>');
-    				$c.find('.messages').append('<div><span class="you">You: </span>' + msg + '</div>');
+    				//$c.find('.messages').append('<div><span class="you">You: </span>' + msg + '</div>');
     			}
+          else if (inTags(c.label)) {
+            console.log(msg);
+            setTimeout(c.send(msg),3000);
+            $('#'+c.label+'tab').append('<div><span class="you">You:</span> ' + msg +
+            '</div>');
+            //$c.find('.messages').append('<div><span class="you">You: </span>' + msg + '</div>');
+          }
     		});
     		$('#text').val('');
     		$('#text').focus();
@@ -313,19 +355,47 @@
     	function eachActiveConnection(fn) {
     		var actives = $('.active');
     		var checkedIds = {};
-    		actives.each(function() {
-    			var peerId = $(this).attr('id');
+        console.log(actives[0]);
+        if (inTags($(actives[0]).attr('id'))) {
+          var tag = WhichTags($(actives[0]).attr('id'));
+          var ids = getIDsInTags(tag);
+          $.each(ids, function(index, value) {
+            if ( value === usernameToID(localStorage.getItem('username'))) {
+              console.log('skipped self');
+            }
+            else {
+            var peerId = value;
+            console.log(peerId);
 
-    			if ( peerId.substr(peerId.length - 3) != 'tab' && !checkedIds[peerId]) {
-    				var conns = peer.connections[peerId];
-    				for (var i = 0, ii = conns.length; i < ii; i += 1) {
-    					var conn = conns[i];
-    					fn(conn, $(this));
-    				}
-    			}
+            var c = peer.connect(peerId, {
+              label: tag,
+              serialization: 'none',
+              metadata: {
+                message: $('#text').val()
+              }
 
-    			checkedIds[peerId] = 1;
-    		});
+            });
+            console.log(c);
+            fn(c, actives[0]);
+          }
+          });
+        }
+        else {
+      		actives.each(function() {
+      			var peerId = $(this).attr('id');
+
+      			if ( peerId.substr(peerId.length - 3) != 'tab' && !checkedIds[peerId]) {
+      				var conns = peer.connections[peerId];
+      				for (var i = 0, ii = conns.length; i < ii; i += 1) {
+      					var conn = conns[i];
+                console.log(conn);
+      					fn(conn, $(this));
+      				}
+      			}
+
+      			checkedIds[peerId] = 1;
+      		});
+        }
     	}
 
     	// Show browser version
@@ -394,7 +464,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="row">
         <div class="col-md-4 col-md-offset-1">
             <form id="send">

@@ -129,6 +129,27 @@ module.exports = function(app, passport) {
     });
   });
 
+  // get ids from tag
+  app.get('/api/tag/:tag', function(req, res) {
+
+    var query = Tag.where({
+      tag: req.params.tag
+    });
+    query.findOne(function(err, tag) {
+      // if there are any errors, return the error
+      if (err)
+        res.send(err);
+
+        
+      res.json({
+        message: tag.peerIDs
+      });
+
+          // check to see if theres already a user with that email
+
+        });
+    });
+
   // Create tag
   app.post('/api/tag/:tag', function(req, res) {
 
